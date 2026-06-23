@@ -1,20 +1,9 @@
-# Virtual environments
-.venv/
-venv/
-
-# Python
 __pycache__/
 *.pyc
-
-# Jupyter
-.ipynb_checkpoints/
-
-# VS Code
-.vscode/
-
-# Models
-*.pkl
-
-# OS
+.venv/
+venv/
+data/*.csv
+models/*.joblib
+models/*.db
 .DS_Store
-Thumbs.dbgroq api key.txt
+.ipynb_checkpoints/
