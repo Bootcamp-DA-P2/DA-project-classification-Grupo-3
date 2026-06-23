@@ -173,7 +173,7 @@ def main():
     best_pipe = Pipeline([("prep", preprocessor), ("clf", candidates[best_name])])
     print(f"\nGridSearchCV sobre {best_name} ...")
     grid = GridSearchCV(best_pipe, grids[best_name], cv=5,
-                        scoring="f1", n_jobs=-1)
+                        scoring="f1_macro", n_jobs=-1)
     grid.fit(X_train, y_train)
     model = grid.best_estimator_
     print(f"Mejores hiperparámetros: {grid.best_params_}")
@@ -181,7 +181,7 @@ def main():
     # --- Evaluación ---
     y_pred_train = model.predict(X_train)
     y_pred_test = model.predict(X_test)
-    y_proba_test = model.predict_proba(X_test)[:, 1]
+    y_proba_test = model.predict_proba(X_test)
 
     train_acc = accuracy_score(y_train, y_pred_train)
     test_acc = accuracy_score(y_test, y_pred_test)
@@ -189,13 +189,14 @@ def main():
 
     metrics = {
         "accuracy": float(test_acc),
-        "precision": float(precision_score(y_test, y_pred_test)),
-        "recall": float(recall_score(y_test, y_pred_test)),
-        "f1": float(f1_score(y_test, y_pred_test)),
-        "roc_auc": float(roc_auc_score(y_test, y_proba_test)),
+        "precision": float(precision_score(y_test, y_pred_test, average='macro')),
+        "recall": float(recall_score(y_test, y_pred_test, average='macro')),
+        "f1": float(f1_score(y_test, y_pred_test, average='macro')),
+        "roc_auc": float(roc_auc_score(y_test, y_proba_test, multi_class='ovr')),
         "train_accuracy": float(train_acc),
         "overfitting_gap": float(overfit),
-    }
+}
+
 
     print("\n=== Métricas en TEST ===")
     for k, v in metrics.items():
@@ -211,9 +212,9 @@ def main():
     plt.savefig(f"{REPORTS_DIR}/confusion_matrix.png", bbox_inches="tight", dpi=120)
     plt.close()
 
-    RocCurveDisplay.from_predictions(y_test, y_proba_test)
+    # RocCurveDisplay.from_predictions(y_test, y_proba_test)
     plt.title(f"Curva ROC (AUC = {metrics['roc_auc']:.3f})")
-    plt.savefig(f"{REPORTS_DIR}/roc_curve.png", bbox_inches="tight", dpi=120)
+    # plt.savefig(f"{REPORTS_DIR}/roc_curve.png", bbox_inches="tight", dpi=120)
     plt.close()
 
     # --- Feature importance (permutación, robusta para cualquier modelo) ---

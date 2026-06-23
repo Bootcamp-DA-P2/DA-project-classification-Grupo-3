@@ -25,7 +25,7 @@ MODEL_PATH = "models/model.joblib"
 META_PATH = "models/metadata.json"
 DB_PATH = "models/feedback.db"
 
-st.set_page_config(page_title="Predicción de satisfacción", page_icon="✈️",
+st.set_page_config(page_title="Predicción de adopción", page_icon="🐾",
                    layout="centered")
 
 
@@ -68,7 +68,7 @@ conn = init_db()
 schema = meta["schema"]
 classes = meta["target_classes"]
 
-st.title("✈️ Predicción de satisfacción del cliente")
+st.title("🐾 Predicción de Velocidad de Adopción")
 st.caption(f"Modelo: {meta['best_model']}  ·  "
            f"F1: {meta['metrics']['f1']:.3f}  ·  "
            f"ROC AUC: {meta['metrics']['roc_auc']:.3f}")
