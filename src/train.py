@@ -230,23 +230,22 @@ def main():
 
     # ── GridSearchCV ────────────────────────────────────────────────────────────
     grids = {
-        "LogisticRegression": {"clf__C": [0.1, 1.0, 10.0]},
+        "LogisticRegression": {"clf__C": [0.1, 1.0]},
         "RandomForest": {
-            "clf__n_estimators":      [200, 300],
-            "clf__max_depth":         [5, 6, 7],
-            "clf__min_samples_leaf":  [25, 35, 50],
+            "clf__n_estimators": [100],
+            "clf__max_depth":    [5, 7],
         },
         "GradientBoosting": {
-            "clf__n_estimators":  [150, 250],
-            "clf__learning_rate": [0.05, 0.1],
-            "clf__max_depth":     [2, 3],
+            "clf__n_estimators":  [100],
+            "clf__learning_rate": [0.1],
+            "clf__max_depth":     [3],
         },
     }
 
     best_pipe = Pipeline([("prep", preprocessor), ("clf", candidates[best_name])])
     print(f"\nGridSearchCV sobre {best_name} ...")
-    grid = GridSearchCV(best_pipe, grids[best_name], cv=5,
-                        scoring="f1_macro", n_jobs=-1, verbose=1)
+    grid = GridSearchCV(best_pipe, grids[best_name], cv=3,
+                    scoring="f1_macro", n_jobs=1, verbose=1)
     grid.fit(X_train, y_train)
     model = grid.best_estimator_
     print(f"Mejores hiperparámetros: {grid.best_params_}")
