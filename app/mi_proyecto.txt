@@ -1,8 +1,0 @@
-mi_proyecto/
-│
-├── app/
-│   └── app.py              <-- Aquí guardas el código que me mostraste
-│
-└── models/
-    ├── model.joblib        <-- Tu modelo entrenado de Scikit-Learn
-    └── metadata.json       <-- El archivo JSON con el esquema y métricas
