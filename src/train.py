@@ -211,9 +211,12 @@ def main():
             class_weight="balanced",
             random_state=RANDOM_STATE, n_jobs=-1
         ),
-        "GradientBoosting": GradientBoostingClassifier(
-            random_state=RANDOM_STATE
-        ),
+       "GradientBoosting": GradientBoostingClassifier(
+           random_state=RANDOM_STATE,
+           max_depth=2,
+           min_samples_leaf=20,
+           subsample=0.8,
+           ),
     }
 
     print("\n=== Validación cruzada (5-Fold, F1 macro) ===")
@@ -230,15 +233,18 @@ def main():
 
     # ── GridSearchCV ────────────────────────────────────────────────────────────
     grids = {
-        "LogisticRegression": {"clf__C": [0.1, 1.0]},
-        "RandomForest": {
-            "clf__n_estimators": [100],
-            "clf__max_depth":    [5, 7],
+            "LogisticRegression": {"clf__C": [0.1, 1.0]},
+            "RandomForest": {
+            "clf__n_estimators":      [200, 300],
+            "clf__max_depth":         [5, 6, 7],
+            "clf__min_samples_leaf":  [25, 35, 50],
         },
         "GradientBoosting": {
-            "clf__n_estimators":  [100],
-            "clf__learning_rate": [0.1],
-            "clf__max_depth":     [3],
+            "clf__n_estimators":      [100, 150],
+            "clf__learning_rate":     [0.03, 0.05],
+            "clf__max_depth":         [2],
+            "clf__subsample":         [0.7, 0.8],
+            "clf__min_samples_leaf":  [20, 30],
         },
     }
 

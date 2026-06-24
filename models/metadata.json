@@ -16,9 +16,11 @@
   },
   "best_model": "GradientBoosting",
   "best_params": {
-    "clf__learning_rate": "0.1",
-    "clf__max_depth": "3",
-    "clf__n_estimators": "100"
+    "clf__learning_rate": "0.05",
+    "clf__max_depth": "2",
+    "clf__min_samples_leaf": "30",
+    "clf__n_estimators": "150",
+    "clf__subsample": "0.7"
   },
   "features": [
     "Type",
@@ -40,6 +42,9 @@
     "State",
     "VideoAmt",
     "PhotoAmt",
+    "has_breed2",
+    "has_color2",
+    "has_color3",
     "has_name",
     "has_description",
     "desc_length",
@@ -51,18 +56,18 @@
     "full_care"
   ],
   "metrics": {
-    "accuracy": 0.39171438194678343,
-    "precision_macro": 0.3322452054875223,
-    "recall_macro": 0.30954190934213843,
-    "f1_macro": 0.29944753836541976,
-    "roc_auc_ovr": 0.6529394533432155,
-    "train_accuracy": 0.4690526315789474,
-    "overfitting_gap": 0.07733824963216396
+    "accuracy": 0.3971034018187942,
+    "precision_macro": 0.307995424760653,
+    "recall_macro": 0.3087309398950538,
+    "f1_macro": 0.29462957915880256,
+    "roc_auc_ovr": 0.655681775120949,
+    "train_accuracy": 0.42770526315789476,
+    "overfitting_gap": 0.030601861339100533
   },
   "cv_results": {
-    "LogisticRegression": 0.28223243901423495,
-    "RandomForest": 0.29269248959767513,
-    "GradientBoosting": 0.3030375702378401
+    "LogisticRegression": 0.2794358153811095,
+    "RandomForest": 0.2963947310028191,
+    "GradientBoosting": 0.3010761157707943
   },
   "schema": {
     "numeric": {
@@ -72,8 +77,8 @@
         "median": 1.0
       },
       "Age": {
-        "min": 0.0,
-        "max": 255.0,
+        "min": 1.0,
+        "max": 144.0,
         "median": 3.0
       },
       "Breed1": {
@@ -138,12 +143,12 @@
       },
       "Quantity": {
         "min": 1.0,
-        "max": 20.0,
+        "max": 10.0,
         "median": 1.0
       },
       "Fee": {
         "min": 0.0,
-        "max": 3000.0,
+        "max": 500.0,
         "median": 0.0
       },
       "State": {
@@ -158,8 +163,23 @@
       },
       "PhotoAmt": {
         "min": 0.0,
-        "max": 30.0,
+        "max": 20.0,
         "median": 3.0
+      },
+      "has_breed2": {
+        "min": 0.0,
+        "max": 1.0,
+        "median": 0.0
+      },
+      "has_color2": {
+        "min": 0.0,
+        "max": 1.0,
+        "median": 1.0
+      },
+      "has_color3": {
+        "min": 0.0,
+        "max": 1.0,
+        "median": 0.0
       },
       "has_name": {
         "min": 0.0,
@@ -210,20 +230,20 @@
     "categorical": {}
   },
   "top_features": {
-    "Age": 0.0369,
-    "Breed1": 0.0358,
-    "PhotoAmt": 0.0198,
-    "Breed2": 0.0138,
-    "desc_length": 0.0101,
-    "FurLength": 0.009,
-    "Quantity": 0.0053,
-    "MaturitySize": 0.0041,
-    "is_mixed_breed": 0.0035,
-    "Vaccinated": 0.0028,
+    "Breed1": 0.0347,
+    "Age": 0.0334,
+    "PhotoAmt": 0.0205,
+    "Breed2": 0.0083,
+    "desc_length": 0.0072,
+    "Quantity": 0.0071,
+    "FurLength": 0.0056,
+    "Vaccinated": 0.005,
+    "Dewormed": 0.0041,
+    "State": 0.0039,
+    "Gender": 0.0028,
     "Sterilized": 0.0027,
-    "State": 0.0022,
-    "Dewormed": 0.0018,
-    "VideoAmt": 0.0018,
-    "Color1": 0.0015
+    "is_puppy": 0.0025,
+    "MaturitySize": 0.0018,
+    "is_mixed_breed": 0.0018
   }
 }
