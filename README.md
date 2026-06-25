@@ -1,83 +1,151 @@
-# ✈️ Predicción de satisfacción de pasajeros — Proyecto de Clasificación
 
-Modelo de Machine Learning que predice la satisfacción de los clientes de una
-aerolínea a partir de sus datos, productivizado en una app de Streamlit.
+# 🐾 PetFinder Adoption Prediction — Proyecto de Clasificación
 
-## 📁 Estructura
+Modelo de Machine Learning que predice la **velocidad de adopción** de mascotas a partir de sus características, productivizado en una app de Streamlit.
+
+> Dataset: [PetFinder.my Adoption Prediction](https://www.kaggle.com/c/petfinder-adoption-prediction) — Kaggle  
+> Variable objetivo: `AdoptionSpeed` (0 = mismo día · 1 = 1-7 días · 2 = 8-30 días · 3 = 31-90 días · 4 = no adoptado)
+
+---
+
+## 📁 Estructura del proyecto
+
 ```
-airline-satisfaction/
-├── data/                 # train.csv (NO se sube a git)
+DA-project-classification-Grupo-3/
+├── data/
+│   ├── train.csv               # Dataset original de Kaggle (NO se sube a git)
+│   ├── train_clean.csv         # Dataset tras limpieza (generado por el notebook)
+│   └── test.csv                # Dataset de test (NO se sube a git)
+├── notebook/
+│   ├── Limpieza_PetFinder.ipynb   # Limpieza y tratamiento de datos → train_clean.csv
+│   └── EDA_PetFinder.ipynb        # Análisis exploratorio de datos
 ├── src/
-│   ├── eda.py            # Análisis exploratorio  -> reports/eda/
-│   └── train.py          # Entrenamiento + evaluación -> models/ y reports/
+│   └── train.py                # Entrenamiento + evaluación → models/ y reports/
 ├── app/
-│   └── app.py            # App de Streamlit (productivización)
-├── models/               # model.joblib + metadata.json + feedback.db (generados)
-├── reports/              # Gráficos: EDA, ROC, matriz confusión, importancias
+│   ├── app.py                  # App de Streamlit (predictor)
+│   └── pages/
+│       ├── 1_Dashboard.py      # Dashboard de KPIs y métricas
+│       └── 2_Nuevos_Datos.py   # Pipeline de ingestión de datos nuevos
+├── models/                     # model.joblib + metadata.json + feedback.db (generados)
+├── reports/                    # Gráficos: ROC, matriz de confusión, feature importance
 ├── tests/
-│   └── test_model.py     # Tests unitarios (pytest)
+│   └── test_model.py           # Tests unitarios (pytest)
+├── .gitignore
 ├── requirements.txt
-├── Dockerfile
 └── README.md
 ```
 
+---
+
 ## 🚀 Cómo ejecutar
 
+### 1. Entorno virtual
+
 ```bash
-# 1. Entorno
-python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+python -m venv .venv
+
+# Activar (Windows Git Bash)
+source .venv/Scripts/activate
+
+# Activar (Mac/Linux)
+source .venv/bin/activate
+
 pip install -r requirements.txt
+```
 
-# 2. Coloca el dataset en data/train.csv
-#    (ajusta --target si la columna objetivo se llama distinto)
+### 2. Descarga el dataset
 
-# 3. EDA
-python src/eda.py --data data/train.csv --target satisfaction
+Descarga `train.csv` y `test.csv` desde [Kaggle](https://www.kaggle.com/c/petfinder-adoption-prediction/data) y colócalos en la carpeta `data/`.
 
-# 4. Entrenamiento (genera el modelo y todas las métricas)
-python src/train.py --data data/train.csv --target satisfaction
+### 3. Limpieza de datos
 
-# 5. App
+Ejecuta el notebook `notebook/Limpieza_PetFinder.ipynb` completo (Run All).  
+Esto genera `data/train_clean.csv`.
+
+### 4. EDA
+
+Ejecuta el notebook `notebook/EDA_PetFinder.ipynb` completo (Run All).
+
+### 5. Entrenamiento del modelo
+
+```bash
+python src/train.py --data data/train_clean.csv
+```
+
+Genera automáticamente:
+- `models/model.joblib` — modelo entrenado
+- `models/metadata.json` — métricas y schema
+- `reports/confusion_matrix.png`
+- `reports/roc_curve.png`
+- `reports/feature_importance.png`
+
+### 6. App de Streamlit
+
+```bash
 streamlit run app/app.py
+```
 
-# 6. Tests
+Abre [http://localhost:8501](http://localhost:8501)
+
+### 7. Tests
+
+```bash
 pytest -q
 ```
 
-### 🐳 Docker (nivel avanzado)
-```bash
-docker build -t airline-app .
-docker run -p 8501:8501 airline-app
-# Abrir http://localhost:8501
-```
+---
+
+## 📊 Resultados del modelo
+
+| Métrica | Valor |
+|---|---|
+| Algoritmo | GradientBoosting |
+| Accuracy (test) | ~39% |
+| F1 Macro | ~29% |
+| ROC AUC (OvR) | ~0.65 |
+| Overfitting | < 5% ✅ |
+
+> El accuracy refleja la dificultad del problema: 5 clases desbalanceadas.  
+> Un clasificador aleatorio obtendría solo un 20%. El modelo casi duplica ese valor.
+
+---
 
 ## ✅ Cobertura del brief
-- Modelo de clasificación funcional ✔ (`train.py`)
-- EDA con visualizaciones ✔ (`eda.py`)
-- Control de overfitting < 5% ✔ (se mide y se testea)
-- Productivización ✔ (`app/app.py`)
-- Métricas: accuracy, precision, recall, F1, ROC AUC, matriz de confusión ✔
-- Feature importance ✔
-- Ensemble (RandomForest / GradientBoosting) ✔
-- Validación cruzada (5-Fold) ✔
-- Ajuste de hiperparámetros (GridSearchCV) ✔
-- Recogida de feedback y de datos nuevos (SQLite) ✔
-- Dockerización ✔ · Base de datos ✔ · Tests unitarios ✔
 
-## 🌿 Flujo de Git (ramas y commits limpios)
-```
-main          # solo versiones estables
-develop       # integración
-feature/eda            -> Romi
-feature/modeling       -> Yasira
-feature/streamlit-app  -> Rita
-```
-Convención de commits (Conventional Commits):
-`feat:`, `fix:`, `docs:`, `refactor:`, `test:`, `chore:`
-Ej: `feat: add GridSearch tuning to training pipeline`
-```bash
-git checkout -b feature/modeling
-git add . && git commit -m "feat: baseline model comparison with CV"
-git push -u origin feature/modeling
-# luego Pull Request -> develop -> main
-```
+| Requisito | Estado | Dónde |
+|---|---|---|
+| Modelo de clasificación funcional | ✅ | `src/train.py` |
+| EDA con visualizaciones | ✅ | `notebook/EDA_PetFinder.ipynb` |
+| Limpieza de datos | ✅ | `notebook/Limpieza_PetFinder.ipynb` |
+| Overfitting < 5% | ✅ | Medido y testeado |
+| Productivización (Streamlit) | ✅ | `app/app.py` |
+| Dashboard de KPIs | ✅ | `app/pages/1_Dashboard.py` |
+| Métricas: accuracy, precision, recall, F1, ROC AUC, matriz de confusión | ✅ | `reports/` |
+| Feature importance | ✅ | `reports/feature_importance.png` |
+| Ensemble (GradientBoosting / RandomForest) | ✅ | `src/train.py` |
+| Validación cruzada (5-Fold) | ✅ | `src/train.py` |
+| Ajuste de hiperparámetros (GridSearchCV) | ✅ | `src/train.py` |
+| Recogida de feedback en producción | ✅ | SQLite — `models/feedback.db` |
+| Pipeline de ingestión de datos nuevos | ✅ | `app/pages/2_Nuevos_Datos.py` |
+| Tests unitarios | ✅ | `tests/test_model.py` |
+
+---
+
+## 👥 Equipo — Grupo 3
+
+| Integrante | Responsabilidad |
+|---|---|
+| **Yasira** | Verificación de datos, validación del modelo (overfitting, residuos), Streamlit |
+| **Rita** | apoyo Streamlit, documentación |
+| **Romina** |  Pipeline de datos, construcción del Acceptance Index, EDA, modelado |
+
+
+Proyecto desarrollado en el marco del bootcamp de Data Analytics.
+
+---
+
+## 📌 Notas
+
+- Los archivos `data/train.csv`, `data/test.csv` y `data/train_clean.csv` **no se suben a GitHub** (ver `.gitignore`).
+- El modelo se regenera ejecutando `src/train.py`. No se sube `model.joblib` a git.
+- La base de datos de feedback (`models/feedback.db`) y de nuevos datos (`models/new_data.db`) se crean automáticamente al lanzar la app.
