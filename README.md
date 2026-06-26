@@ -149,3 +149,4 @@ Proyecto desarrollado en el marco del bootcamp de Data Analytics.
 - Los archivos `data/train.csv`, `data/test.csv` y `data/train_clean.csv` **no se suben a GitHub** (ver `.gitignore`).
 - El modelo se regenera ejecutando `src/train.py`. No se sube `model.joblib` a git.
 - La base de datos de feedback (`models/feedback.db`) y de nuevos datos (`models/new_data.db`) se crean automáticamente al lanzar la app.
+- Docker realizado, pero no se han realizado pruebas de su funcionamiento debido a la fecha de entrega.
